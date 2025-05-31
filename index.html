@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Aviator Predictor</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #121212; color: white; }
+    .container { max-width: 500px; margin: auto; background: #1e1e1e; padding: 20px; border-radius: 10px; }
+    input, button, select { width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: none; }
+    .vip { background: #333; padding: 15px; border-radius: 10px; margin-top: 20px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🎯 Aviator Predictor</h2>
+
+    <div id="free-mode">
+      <h3>Free Prediction</h3>
+      <p>You get <b>1 prediction per hour</b> in Free Mode.</p>
+      <input type="number" id="odd1" placeholder="Enter 1st Odd">
+      <input type="number" id="odd2" placeholder="Enter 2nd Odd">
+      <input type="number" id="odd3" placeholder="Enter 3rd Odd">
+      <button onclick="predict()">Predict</button>
+      <p id="prediction"></p>
+      <p id="cooldownMsg" style="color: orange;"></p>
+    </div>
+
+    <div class="vip">
+      <h3>💎 Go VIP</h3>
+      <p>Send payment to <b>Wave: +220 691 8575</b></p>
+      <ul>
+        <li>D600 – 1 Week</li>
+        <li>D1500 – 1 Month</li>
+        <li>D3500 – Lifetime</li>
+      </ul>
+      <input type="text" id="vip-name" placeholder="Enter Name">
+      <input type="text" id="vip-phone" placeholder="Enter Phone or Transaction ID">
+      <button onclick="unlockVIP()">Unlock VIP</button>
+      <p id="vip-status" style="color: lime;"></p>
+    </div>
+
+    <div id="vip-section" class="hidden">
+      <h3>VIP Unlimited Predictions</h3>
+      <input type="number" id="vip-odd1" placeholder="Enter 1st Odd">
+      <input type="number" id="vip-odd2" placeholder="Enter 2nd Odd">
+      <input type="number" id="vip-odd3" placeholder="Enter 3rd Odd">
+      <button onclick="predictVIP()">Predict (VIP)</button>
+      <p id="vip-result"></p>
+    </div>
+  </div>
+
+  <script>
+    let lastPredictionTime = 0;
+
+    function predict() {
+      const now = Date.now();
+      if (now - lastPredictionTime < 3600000) {
+        document.getElementById('cooldownMsg').textContent = "⏳ Please wait an hour for your next free prediction.";
+        return;
+      }
+
+      const o1 = parseFloat(document.getElementById("odd1").value);
+      const o2 = parseFloat(document.getElementById("odd2").value);
+      const o3 = parseFloat(document.getElementById("odd3").value);
+      const prediction = generatePrediction(o1, o2, o3);
+      document.getElementById("prediction").textContent = "Predicted Odd: " + prediction.toFixed(2);
+      lastPredictionTime = now;
+      document.getElementById('cooldownMsg').textContent = "";
+    }
+
+    function generatePrediction(a, b, c) {
+      const base = (a + b + c) / 3;
+      const rand = Math.random() * (1.2 - 0.85) + 0.85;
+      return base * rand;
+    }
+
+    function unlockVIP() {
+      const name = document.getElementById("vip-name").value;
+      const phone = document.getElementById("vip-phone").value;
+      if (name && phone) {
+        document.getElementById("vip-status").textContent = "✅ VIP Access Granted!";
+        document.getElementById("vip-section").classList.remove("hidden");
+      } else {
+        document.getElementById("vip-status").textContent = "❌ Please enter name and transaction ID.";
+      }
+    }
+
+    function predictVIP() {
+      const o1 = parseFloat(document.getElementById("vip-odd1").value);
+      const o2 = parseFloat(document.getElementById("vip-odd2").value);
+      const o3 = parseFloat(document.getElementById("vip-odd3").value);
+      const prediction = generatePrediction(o1, o2, o3);
+      document.getElementById("vip-result").textContent = "VIP Predicted Odd: " + prediction.toFixed(2);
+    }
+  </script>
+</body>
+</html>
